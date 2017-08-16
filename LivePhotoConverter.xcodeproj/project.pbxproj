@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		882884201F44B82C0036277F /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8828841F1F44B82C0036277F /* PhotosCollectionViewCell.swift */; };
 		88FDECBC1F441B4800A444C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FDECBB1F441B4800A444C8 /* AppDelegate.swift */; };
 		88FDECBE1F441B4800A444C8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FDECBD1F441B4800A444C8 /* ViewController.swift */; };
 		88FDECC11F441B4800A444C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88FDECBF1F441B4800A444C8 /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 /* Begin PBXFileReference section */
 		0C7E949BF6DD4ED3D1D6A8B0 /* Pods-LivePhotoConverter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LivePhotoConverter.release.xcconfig"; path = "Pods/Target Support Files/Pods-LivePhotoConverter/Pods-LivePhotoConverter.release.xcconfig"; sourceTree = "<group>"; };
 		202E62E13980FE1BC223D9D5 /* Pods_LivePhotoConverter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LivePhotoConverter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8828841F1F44B82C0036277F /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		88FDECB81F441B4800A444C8 /* LivePhotoConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LivePhotoConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88FDECBB1F441B4800A444C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88FDECBD1F441B4800A444C8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			children = (
 				88FDECBB1F441B4800A444C8 /* AppDelegate.swift */,
 				88FDECBD1F441B4800A444C8 /* ViewController.swift */,
+				8828841F1F44B82C0036277F /* PhotosCollectionViewCell.swift */,
 				88FDECBF1F441B4800A444C8 /* Main.storyboard */,
 				88FDECC21F441B4800A444C8 /* Assets.xcassets */,
 				88FDECC41F441B4800A444C8 /* LaunchScreen.storyboard */,
@@ -214,6 +217,7 @@
 			files = (
 				88FDECBE1F441B4800A444C8 /* ViewController.swift in Sources */,
 				88FDECBC1F441B4800A444C8 /* AppDelegate.swift in Sources */,
+				882884201F44B82C0036277F /* PhotosCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
