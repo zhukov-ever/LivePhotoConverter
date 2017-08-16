@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="1tu-ro-dEl">
-    <device id="ipad9_7" orientation="landscape">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -9,16 +9,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="LivePhotoConverter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="LivePhotoConverter" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
@@ -27,6 +27,7 @@
                         <outlet property="buttonRequestPermission" destination="52v-f3-XRe" id="arT-15-bWF"/>
                         <outlet property="collectionView" destination="pkr-5E-LYO" id="8xn-zo-UbM"/>
                         <outlet property="viewWaitingForPermissions" destination="rlq-MZ-V8Y" id="qXP-T3-tnJ"/>
+                        <segue destination="sPO-3v-zyc" kind="show" identifier="show-photo" id="uyJ-fu-gSd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -95,6 +96,39 @@
                 </collectionView>
             </objects>
             <point key="canvasLocation" x="863.671875" y="138.28125"/>
+        </scene>
+        <!--Photo View Controller-->
+        <scene sceneID="Ozl-dK-6kt">
+            <objects>
+                <viewController id="sPO-3v-zyc" customClass="PhotoViewController" customModule="LivePhotoConverter" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JNY-O7-dhj"/>
+                        <viewControllerLayoutGuide type="bottom" id="sLo-0x-tkI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wfq-in-qlZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Gfe-Wx-owG">
+                                <rect key="frame" x="85" y="283" width="150" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="AS5-QK-22Y"/>
+                                </constraints>
+                            </progressView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Gfe-Wx-owG" firstAttribute="centerX" secondItem="wfq-in-qlZ" secondAttribute="centerX" id="jIA-Lt-eoi"/>
+                            <constraint firstItem="Gfe-Wx-owG" firstAttribute="centerY" secondItem="wfq-in-qlZ" secondAttribute="centerY" id="w7O-uZ-P9n"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="progressView" destination="Gfe-Wx-owG" id="cES-Yh-CgZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ibx-Mj-lB8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1608" y="138"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="C0t-Tf-Q03">

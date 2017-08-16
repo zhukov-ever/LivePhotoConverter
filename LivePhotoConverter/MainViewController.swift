@@ -8,10 +8,11 @@
 
 import UIKit
 import Photos
+import PhotosUI
 import PermissionScope
 
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
 
     let pscope = { () -> PermissionScope in 
         let _pscope = PermissionScope()
@@ -41,13 +42,24 @@ class ViewController: UIViewController {
         requestPermissions()
     }
 
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let viewController = segue.destination as? PhotoViewController else {
+            return
+        }
+        guard let assetItem = collectionView.indexPathsForSelectedItems?.first?.item else {
+            return
+        }
+        
+        viewController.asset = fetchResult.object(at: assetItem)
+    }
 
 
 }
 
 
 
-extension ViewController {
+extension MainViewController {
     
     func styleRequestPermissions() {
         viewWaitingForPermissions.backgroundColor = UIColor.white
@@ -73,7 +85,7 @@ extension ViewController {
 
 
 
-extension ViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MainViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
     func reloadPhotosLibrary() {
@@ -86,7 +98,15 @@ extension ViewController : UICollectionViewDelegate, UICollectionViewDataSource,
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: false)
+        
+        let asset = fetchResult.object(at: indexPath.item)
+        
+        if asset.mediaSubtypes.contains(.photoLive) {
+            performSegue(withIdentifier: "show-photo", sender: nil)
+        } else {
+            print("not a live photo")
+        }
+        
     }
     
     
