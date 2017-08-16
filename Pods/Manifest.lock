@@ -1,0 +1,12 @@
+PODS:
+  - PermissionScope (1.1.1)
+
+DEPENDENCIES:
+  - PermissionScope
+
+SPEC CHECKSUMS:
+  PermissionScope: a30c16e015779ba27c97c124e7539e27b5829de2
+
+PODFILE CHECKSUM: b6d715b3425ea0561f4d1a4eb322b4399adb4fbe
+
+COCOAPODS: 1.2.0
