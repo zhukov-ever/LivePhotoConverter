@@ -14,7 +14,7 @@ import PermissionScope
 
 class MainViewController: UIViewController {
 
-    let pscope = { () -> PermissionScope in 
+    let pscope = { () -> PermissionScope in
         let _pscope = PermissionScope()
         _pscope.closeButton.isHidden = true
         _pscope.addPermission(PhotosPermission(),
@@ -27,8 +27,9 @@ class MainViewController: UIViewController {
     @IBOutlet weak var buttonRequestPermission: UIButton!
 
     
-    var fetchResult: PHFetchResult<PHAsset>!
-    let imageManager = PHCachingImageManager()
+    var fetchResult: PHFetchResult<PHAsset>?
+    var imageManager: PHCachingImageManager?
+    
     @IBOutlet var collectionView: UICollectionView!
     
     
@@ -50,7 +51,9 @@ class MainViewController: UIViewController {
         guard let assetItem = collectionView.indexPathsForSelectedItems?.first?.item else {
             return
         }
-        
+        guard let fetchResult = fetchResult else {
+            return
+        }
         viewController.asset = fetchResult.object(at: assetItem)
     }
 
@@ -89,6 +92,8 @@ extension MainViewController : UICollectionViewDelegate, UICollectionViewDataSou
     
     
     func reloadPhotosLibrary() {
+        imageManager = PHCachingImageManager()
+        
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         fetchResult = PHAsset.fetchAssets(with: allPhotosOptions)
@@ -98,6 +103,9 @@ extension MainViewController : UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let fetchResult = fetchResult else {
+            return
+        }
         
         let asset = fetchResult.object(at: indexPath.item)
         
@@ -111,6 +119,9 @@ extension MainViewController : UICollectionViewDelegate, UICollectionViewDataSou
     
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let fetchResult = fetchResult else {
+            return 0
+        }
         
         return fetchResult.count
     }
@@ -121,13 +132,16 @@ extension MainViewController : UICollectionViewDelegate, UICollectionViewDataSou
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? PhotosCollectionViewCell else {
             fatalError("unexpected cell in collection view")
         }
+        guard let fetchResult = fetchResult else {
+            fatalError("unexpected cell in collection view")
+        }
         
         let asset = fetchResult.object(at: indexPath.item)
         
         cell.labelLive.isHidden = !asset.mediaSubtypes.contains(.photoLive)
         
         cell.representedAssetIdentifier = asset.localIdentifier
-        imageManager.requestImage(for: asset, targetSize: CGSize(width: 150, height: 150), contentMode: .aspectFill, options: nil, resultHandler: { image, _ in
+        imageManager?.requestImage(for: asset, targetSize: CGSize(width: 150, height: 150), contentMode: .aspectFill, options: nil, resultHandler: { image, _ in
             if cell.representedAssetIdentifier == asset.localIdentifier && image != nil {
                 cell.imageViewPhoto.image = image
             }
