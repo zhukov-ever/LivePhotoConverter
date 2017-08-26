@@ -28,6 +28,8 @@ class PhotoViewController: UIViewController {
         livePhotoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         livePhotoView.delegate = self
         
+        navigationController?.isToolbarHidden = false
+        
         updateLivePhoto()
     }
 
@@ -38,47 +40,91 @@ class PhotoViewController: UIViewController {
     }
     
     func updateLivePhoto() {
-        // Prepare the options to pass when fetching the live photo.
         let options = PHLivePhotoRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.isNetworkAccessAllowed = true
         options.progressHandler = { progress, _, _, _ in
-            // Handler might not be called on the main queue, so re-dispatch for UI work.
             DispatchQueue.main.sync {
                 self.progressView.progress = Float(progress)
             }
         }
         
         self.progressView.isHidden = false
-        // Request the live photo for the asset from the default PHImageManager.
+        
         PHImageManager.default().requestLivePhoto(for: asset,
                                                   targetSize: targetSize,
                                                   contentMode: .aspectFit,
                                                   options: options,
                                                   resultHandler:
             { livePhoto, _ in
-//                // Hide the progress view now the request has completed.
+                
                 self.progressView.isHidden = true
                 
-                // If successful, show the live photo view and display the live photo.
+                
                 guard let livePhoto = livePhoto else { return }
                 
-                // Now that we have the Live Photo, show it.
-//                self.imageView.isHidden = true
-//                self.animatedImageView.isHidden = true
                 self.livePhotoView.isHidden = false
                 self.livePhotoView.livePhoto = livePhoto
                 
-                self.livePhotoView.startPlayback(with: .full)
-//                if !self.isPlayingHint {
-//                    // Playback a short section of the live photo; similar to the Photos share sheet.
-//                    self.isPlayingHint = true
-//                    self.livePhotoView.startPlayback(with: .hint)
-//                }
-                
         })
     }
+    
+    func play() {
+        self.livePhotoView.startPlayback(with: .full)
+    }
 
+    func makeVideo() {
+
+        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + asset.localIdentifier + ".mov"
+        guard let fileUrl = URL(string: filePath)
+            else { fatalError() }
+
+        
+        let options = PHVideoRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.deliveryMode = .automatic
+        options.progressHandler = { progress, _, _, _ in
+            DispatchQueue.main.sync {
+                self.progressView.progress = Float(progress)
+            }
+        }
+        
+        
+        guard let livePhoto = livePhotoView.livePhoto else {
+            return
+        }
+        let assetResources = PHAssetResource.assetResources(for: livePhoto)
+        var videoResource:PHAssetResource?
+        for resource in assetResources {
+            if (resource.type == PHAssetResourceType.pairedVideo) {
+                videoResource = resource;
+                break;
+            }
+        }
+
+        guard let _videoResource = videoResource else {
+            return
+        }
+        
+        print("kek")
+
+        PHAssetResourceManager.default().writeData(for: _videoResource, toFile: fileUrl, options: nil) { (error:Error?) in
+//            assert(error == nil)
+        }
+    }
+
+    
+    
+    
+    @IBAction func makeVideoHandler(_ sender: Any) {
+        makeVideo()
+    }
+    
+    @IBAction func playHandler(_ sender: Any) {
+        play()
+    }
+    
+    
 }
 
 

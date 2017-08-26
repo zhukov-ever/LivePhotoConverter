@@ -122,6 +122,19 @@
                             <constraint firstItem="Gfe-Wx-owG" firstAttribute="centerY" secondItem="wfq-in-qlZ" secondAttribute="centerY" id="w7O-uZ-P9n"/>
                         </constraints>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="make video" id="WWn-aS-zHX">
+                            <connections>
+                                <action selector="makeVideoHandler:" destination="sPO-3v-zyc" id="MU8-Fr-ndX"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="play" id="mYx-Tw-eOj">
+                            <connections>
+                                <action selector="playHandler:" destination="sPO-3v-zyc" id="cDF-dQ-kqQ"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="progressView" destination="Gfe-Wx-owG" id="cES-Yh-CgZ"/>
                     </connections>
