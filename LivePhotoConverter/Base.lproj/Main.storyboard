@@ -140,6 +140,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="progressView" destination="Gfe-Wx-owG" id="cES-Yh-CgZ"/>
+                        <outlet property="shareButton" destination="WWn-aS-zHX" id="eua-9Z-EU6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ibx-Mj-lB8" userLabel="First Responder" sceneMemberID="firstResponder"/>

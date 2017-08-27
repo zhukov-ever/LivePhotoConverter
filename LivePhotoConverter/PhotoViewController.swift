@@ -18,6 +18,7 @@ class PhotoViewController: UIViewController {
     var asset: PHAsset!
     
     @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     
     
     override func viewDidLoad() {
@@ -136,14 +137,14 @@ class PhotoViewController: UIViewController {
             let dfTime = DateFormatter()
             dfTime.dateFormat = "HHmmss"
             
-            let moviesDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]  + "/" + dfDay.string(from: Date()) + "/"
-            let moviesDirectoryUrl = URL(fileURLWithPath: moviesDirectoryPath, isDirectory: true)
-            let filePath = moviesDirectoryPath + dfTime.string(from: Date()) + ".mov"
+            let moviesDirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]  + "/" + dfDay.string(from: Date()) + "/"
+            let moviesDirUrl = URL(fileURLWithPath: moviesDirPath, isDirectory: true)
+            let filePath = moviesDirPath + dfTime.string(from: Date()) + ".mov"
             let fileUrl = URL(fileURLWithPath: filePath)
             
             do {
-                if !FileManager.default.fileExists(atPath: moviesDirectoryPath) {
-                    try FileManager.default.createDirectory(at: moviesDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
+                if !FileManager.default.fileExists(atPath: moviesDirPath) {
+                    try FileManager.default.createDirectory(at: moviesDirUrl, withIntermediateDirectories: true, attributes: nil)
                 }
                 try FileManager.default.copyItem(at: url, to: fileUrl)
             } catch {
@@ -152,14 +153,45 @@ class PhotoViewController: UIViewController {
         }
     }
     
+    func shareWithOtherHandler() {
+        makeTempVideoFile { (url:URL) in
+            let dfDay = DateFormatter()
+            dfDay.dateFormat = "yyyyMMdd"
+            let dfTime = DateFormatter()
+            dfTime.dateFormat = "HHmmss"
+            
+            let moviesDirPath = NSTemporaryDirectory() + dfDay.string(from: Date()) + "/"
+            let moviesDirUrl = URL(fileURLWithPath: moviesDirPath, isDirectory: true)
+            let filePath = moviesDirPath + dfTime.string(from: Date()) + ".mov"
+            let fileUrl = URL(fileURLWithPath: filePath)
+            
+            do {
+                if !FileManager.default.fileExists(atPath: moviesDirPath) {
+                    try FileManager.default.createDirectory(at: moviesDirUrl, withIntermediateDirectories: true, attributes: nil)
+                }
+                try FileManager.default.copyItem(at: url, to: fileUrl)
+            } catch {
+                fatalError()
+            }
+            
+            let vc = UIActivityViewController(activityItems: [fileUrl], applicationActivities: nil)
+            vc.popoverPresentationController?.barButtonItem = self.shareButton
+            self.present(vc, animated: true, completion: nil)
+        }
+    }
     
     
     @IBAction func shareHandler(_ sender: Any) {
-        let alert = UIAlertController(title: "Choose action", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Choose action", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         alert.addAction(UIAlertAction(title: "save to Documents", style: UIAlertActionStyle.default, handler: { _ in
             self.saveToDocumentsHandler()
         }))
-        alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "share with ...", style: UIAlertActionStyle.default, handler: { _ in
+            self.shareWithOtherHandler()
+        }))
+        alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.destructive	, handler: { _ in
+        }))
+        alert.popoverPresentationController?.barButtonItem = self.shareButton
         self.present(alert, animated: true, completion: nil)
     }
     
