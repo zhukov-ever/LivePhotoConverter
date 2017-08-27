@@ -21,7 +21,7 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="3r2-R2-SCV"/>
                     <connections>
@@ -117,7 +117,7 @@
                                 </constraints>
                             </progressView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Gfe-Wx-owG" firstAttribute="centerX" secondItem="wfq-in-qlZ" secondAttribute="centerX" id="jIA-Lt-eoi"/>
                             <constraint firstItem="Gfe-Wx-owG" firstAttribute="centerY" secondItem="wfq-in-qlZ" secondAttribute="centerY" id="w7O-uZ-P9n"/>
@@ -126,9 +126,9 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="qrE-e7-qnn">
                         <rightBarButtonItems>
-                            <barButtonItem title="[save]" id="WWn-aS-zHX">
+                            <barButtonItem title="[share]" id="WWn-aS-zHX">
                                 <connections>
-                                    <action selector="makeVideoHandler:" destination="sPO-3v-zyc" id="MU8-Fr-ndX"/>
+                                    <action selector="shareHandler:" destination="sPO-3v-zyc" id="9Ny-GU-R2F"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="[play]" id="mYx-Tw-eOj">

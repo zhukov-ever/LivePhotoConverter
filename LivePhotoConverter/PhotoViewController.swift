@@ -27,16 +27,11 @@ class PhotoViewController: UIViewController {
         view.insertSubview(livePhotoView, at: 0)
         livePhotoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         livePhotoView.delegate = self
+        livePhotoView.contentMode = .scaleAspectFit
         
         updateLivePhoto()
     }
 
-    var targetSize: CGSize {
-        let scale = UIScreen.main.scale
-        return CGSize(width: livePhotoView.bounds.width * scale,
-                      height: livePhotoView.bounds.height * scale)
-    }
-    
     func updateLivePhoto() {
         self.progressView.isHidden = false
         
@@ -50,7 +45,7 @@ class PhotoViewController: UIViewController {
         }
         
         self.progressView.isHidden = false
-        PHImageManager.default().requestLivePhoto(for: asset, targetSize: targetSize, contentMode: .aspectFit, options: options) { (livePhoto:PHLivePhoto?, params:[AnyHashable : Any]?) in
+        PHImageManager.default().requestLivePhoto(for: asset, targetSize: livePhotoView.bounds.size, contentMode: PHImageContentMode.aspectFit, options: options) { (livePhoto:PHLivePhoto?, params:[AnyHashable : Any]?) in
             
             self.progressView.isHidden = true
             
@@ -66,9 +61,9 @@ class PhotoViewController: UIViewController {
         self.livePhotoView.startPlayback(with: .hint)
     }
 
-    func makeVideo(urlToFile:@escaping (URL)->Void) {
+    func makeTempVideoFile(urlToFile:@escaping (URL)->Void) {
 
-        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + "tmp" + ".mov"
+        let filePath = NSTemporaryDirectory() + "tmp" + ".mov"
         let fileUrl = URL(fileURLWithPath: filePath)
         
         guard let livePhoto = livePhotoView.livePhoto
@@ -96,6 +91,13 @@ class PhotoViewController: UIViewController {
         guard let _videoResource = videoResource
             else { return }
 
+        do {
+            if FileManager.default.fileExists(atPath: filePath) {
+                try FileManager.default.removeItem(at: fileUrl)
+            }
+        } catch {
+            fatalError()
+        }
         
         PHAssetResourceManager.default().requestData(for: _videoResource, options: options, dataReceivedHandler: { (data:Data) in
             do {
@@ -127,13 +129,38 @@ class PhotoViewController: UIViewController {
         }
     }
 
-    
-    
-    
-    @IBAction func makeVideoHandler(_ sender: Any) {
-        makeVideo { (url:URL) in
+    func saveToDocumentsHandler() {
+        makeTempVideoFile { (url:URL) in
+            let dfDay = DateFormatter()
+            dfDay.dateFormat = "yyyyMMdd"
+            let dfTime = DateFormatter()
+            dfTime.dateFormat = "HHmmss"
             
+            let moviesDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]  + "/" + dfDay.string(from: Date()) + "/"
+            let moviesDirectoryUrl = URL(fileURLWithPath: moviesDirectoryPath, isDirectory: true)
+            let filePath = moviesDirectoryPath + dfTime.string(from: Date()) + ".mov"
+            let fileUrl = URL(fileURLWithPath: filePath)
+            
+            do {
+                if !FileManager.default.fileExists(atPath: moviesDirectoryPath) {
+                    try FileManager.default.createDirectory(at: moviesDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
+                }
+                try FileManager.default.copyItem(at: url, to: fileUrl)
+            } catch {
+                fatalError()
+            }
         }
+    }
+    
+    
+    
+    @IBAction func shareHandler(_ sender: Any) {
+        let alert = UIAlertController(title: "Choose action", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "save to Documents", style: UIAlertActionStyle.default, handler: { _ in
+            self.saveToDocumentsHandler()
+        }))
+        alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func playHandler(_ sender: Any) {
