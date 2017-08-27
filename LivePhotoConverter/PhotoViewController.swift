@@ -24,11 +24,9 @@ class PhotoViewController: UIViewController {
         super.viewDidLoad()
 
         livePhotoView.frame = view.bounds
-        view.addSubview(livePhotoView)
+        view.insertSubview(livePhotoView, at: 0)
         livePhotoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         livePhotoView.delegate = self
-        
-        navigationController?.isToolbarHidden = false
         
         updateLivePhoto()
     }
@@ -40,6 +38,8 @@ class PhotoViewController: UIViewController {
     }
     
     func updateLivePhoto() {
+        self.progressView.isHidden = false
+        
         let options = PHLivePhotoRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.isNetworkAccessAllowed = true
@@ -50,66 +50,80 @@ class PhotoViewController: UIViewController {
         }
         
         self.progressView.isHidden = false
-        
-        PHImageManager.default().requestLivePhoto(for: asset,
-                                                  targetSize: targetSize,
-                                                  contentMode: .aspectFit,
-                                                  options: options,
-                                                  resultHandler:
-            { livePhoto, _ in
-                
-                self.progressView.isHidden = true
-                
-                
-                guard let livePhoto = livePhoto else { return }
-                
-                self.livePhotoView.isHidden = false
-                self.livePhotoView.livePhoto = livePhoto
-                
-        })
+        PHImageManager.default().requestLivePhoto(for: asset, targetSize: targetSize, contentMode: .aspectFit, options: options) { (livePhoto:PHLivePhoto?, params:[AnyHashable : Any]?) in
+            
+            self.progressView.isHidden = true
+            
+            guard let livePhoto = livePhoto
+                else { return }
+            
+            self.livePhotoView.isHidden = false
+            self.livePhotoView.livePhoto = livePhoto
+        }
     }
     
     func play() {
-        self.livePhotoView.startPlayback(with: .full)
+        self.livePhotoView.startPlayback(with: .hint)
     }
 
-    func makeVideo() {
+    func makeVideo(urlToFile:@escaping (URL)->Void) {
 
-        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + asset.localIdentifier + ".mov"
-        guard let fileUrl = URL(string: filePath)
-            else { fatalError() }
-
+        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + "tmp" + ".mov"
+        let fileUrl = URL(fileURLWithPath: filePath)
         
-        let options = PHVideoRequestOptions()
+        guard let livePhoto = livePhotoView.livePhoto
+            else { fatalError() }
+        
+        progressView.isHidden = false
+        
+        let options = PHAssetResourceRequestOptions()
         options.isNetworkAccessAllowed = true
-        options.deliveryMode = .automatic
-        options.progressHandler = { progress, _, _, _ in
+        options.progressHandler = { progress in
             DispatchQueue.main.sync {
                 self.progressView.progress = Float(progress)
             }
         }
         
-        
-        guard let livePhoto = livePhotoView.livePhoto else {
-            return
-        }
         let assetResources = PHAssetResource.assetResources(for: livePhoto)
         var videoResource:PHAssetResource?
         for resource in assetResources {
             if (resource.type == PHAssetResourceType.pairedVideo) {
-                videoResource = resource;
+                videoResource = resource
                 break;
             }
         }
 
-        guard let _videoResource = videoResource else {
-            return
-        }
-        
-        print("kek")
+        guard let _videoResource = videoResource
+            else { return }
 
-        PHAssetResourceManager.default().writeData(for: _videoResource, toFile: fileUrl, options: nil) { (error:Error?) in
-//            assert(error == nil)
+        
+        PHAssetResourceManager.default().requestData(for: _videoResource, options: options, dataReceivedHandler: { (data:Data) in
+            do {
+                if !FileManager.default.fileExists(atPath: filePath) {
+                    try data.write(to: fileUrl, options: Data.WritingOptions.atomic)
+                } else {
+                    let fileHandle = try FileHandle(forWritingTo: fileUrl)
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write(data)
+                    fileHandle.closeFile()
+                }
+                
+            } catch {
+                fatalError()
+            }
+            
+            
+            if data.count == 0 {
+                DispatchQueue.main.sync {
+                    self.progressView.isHidden = true
+                }
+                urlToFile(fileUrl)
+            }
+            
+        }) { (error:Error?) in
+            DispatchQueue.main.sync {
+                self.progressView.isHidden = true
+            }
         }
     }
 
@@ -117,7 +131,9 @@ class PhotoViewController: UIViewController {
     
     
     @IBAction func makeVideoHandler(_ sender: Any) {
-        makeVideo()
+        makeVideo { (url:URL) in
+            
+        }
     }
     
     @IBAction func playHandler(_ sender: Any) {

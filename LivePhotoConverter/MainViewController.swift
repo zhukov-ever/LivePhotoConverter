@@ -94,9 +94,14 @@ extension MainViewController : UICollectionViewDelegate, UICollectionViewDataSou
     func reloadPhotosLibrary() {
         imageManager = PHCachingImageManager()
         
-        let allPhotosOptions = PHFetchOptions()
-        allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        fetchResult = PHAsset.fetchAssets(with: allPhotosOptions)
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.includeHiddenAssets = true
+        fetchOptions.includeAllBurstAssets = true
+        
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        fetchOptions.predicate = NSPredicate(format: "mediaSubtype == %ld", PHAssetMediaSubtype.photoLive.rawValue)
+        
+        fetchResult = PHAsset.fetchAssets(with: fetchOptions)
         
         collectionView.delegate = self
         collectionView.dataSource = self

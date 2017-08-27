@@ -153,7 +153,7 @@
 				TargetAttributes = {
 					88FDECB71F441B4800A444C8 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 4UMJWGHP5U;
+						DevelopmentTeam = NT4L7B437Q;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -371,10 +371,10 @@
 			baseConfigurationReference = 9430AAA608633EAB6B4DF5FF /* Pods-LivePhotoConverter.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 4UMJWGHP5U;
+				DEVELOPMENT_TEAM = NT4L7B437Q;
 				INFOPLIST_FILE = LivePhotoConverter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = none.LivePhotoConverter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhn.LivePhotoConverter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -385,10 +385,10 @@
 			baseConfigurationReference = 0C7E949BF6DD4ED3D1D6A8B0 /* Pods-LivePhotoConverter.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 4UMJWGHP5U;
+				DEVELOPMENT_TEAM = NT4L7B437Q;
 				INFOPLIST_FILE = LivePhotoConverter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = none.LivePhotoConverter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhn.LivePhotoConverter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
